@@ -1,0 +1,122 @@
+@import 'tailwindcss';
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* Design tokens. Components use the semantic names (bg-surface, text-muted, ...). */
+@theme {
+  --font-sans: 'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  --color-brand-50: #eef2ff;
+  --color-brand-100: #e0e7ff;
+  --color-brand-200: #c7d2fe;
+  --color-brand-300: #a5b4fc;
+  --color-brand-400: #818cf8;
+  --color-brand-500: #6366f1;
+  --color-brand-600: #4f46e5;
+  --color-brand-700: #4338ca;
+  --color-brand-800: #3730a3;
+  --color-brand-900: #312e81;
+
+  --color-canvas: var(--tx-canvas);
+  --color-surface: var(--tx-surface);
+  --color-surface-2: var(--tx-surface-2);
+  --color-line: var(--tx-line);
+  --color-ink: var(--tx-ink);
+  --color-muted: var(--tx-muted);
+  --color-faint: var(--tx-faint);
+}
+
+:root {
+  --tx-canvas: #f6f7fb;
+  --tx-surface: #ffffff;
+  --tx-surface-2: #f1f3f9;
+  --tx-line: #e3e6ef;
+  --tx-ink: #121726;
+  --tx-muted: #5b6478;
+  --tx-faint: #8d95a8;
+  /* chart slots (validated categorical order, see dataviz reference palette) */
+  --viz-1: #2a78d6;
+  --viz-2: #eb6834;
+  --viz-grid: #e9ecf3;
+  color-scheme: light;
+}
+
+.dark {
+  --tx-canvas: #0b0e17;
+  --tx-surface: #121725;
+  --tx-surface-2: #182033;
+  --tx-line: #252e44;
+  --tx-ink: #e8ebf3;
+  --tx-muted: #a1a9bd;
+  --tx-faint: #6d7690;
+  --viz-1: #3987e5;
+  --viz-2: #d95926;
+  --viz-grid: #222a3d;
+  color-scheme: dark;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  @apply bg-canvas text-ink font-sans antialiased;
+  font-feature-settings: 'cv11', 'ss01';
+}
+
+::selection {
+  @apply bg-brand-500/25;
+}
+
+@layer components {
+  .card {
+    @apply rounded-xl border border-line bg-surface shadow-[0_1px_2px_rgba(16,24,40,0.04)];
+  }
+  .label {
+    @apply mb-1.5 block text-xs font-medium tracking-wide text-muted uppercase;
+  }
+  .field {
+    @apply w-full rounded-lg border border-line bg-surface px-3 py-2 text-sm text-ink placeholder:text-faint outline-none transition focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20 disabled:opacity-60;
+  }
+  .kbd {
+    @apply rounded border border-line bg-surface-2 px-1.5 py-0.5 font-mono text-[11px] text-muted;
+  }
+}
+
+@keyframes pulse-ring {
+  0% {
+    box-shadow: 0 0 0 0 rgb(239 68 68 / 0.5);
+  }
+  100% {
+    box-shadow: 0 0 0 8px rgb(239 68 68 / 0);
+  }
+}
+.pulse-ring {
+  animation: pulse-ring 1.6s ease-out infinite;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.fade-in {
+  animation: fade-in 0.25s ease-out both;
+}
+
+.glow {
+  background: radial-gradient(ellipse 80% 50% at 50% -10%, color-mix(in oklab, var(--color-brand-500) 18%, transparent), transparent 70%);
+}
+.grid-bg {
+  background-image: linear-gradient(to right, var(--tx-line) 1px, transparent 1px), linear-gradient(to bottom, var(--tx-line) 1px, transparent 1px);
+  background-size: 48px 48px;
+  mask-image: radial-gradient(ellipse 70% 60% at 50% 0%, #000 30%, transparent 75%);
+}
