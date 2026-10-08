@@ -1,0 +1,36 @@
+# deps / builds
+node_modules/
+dist/
+build/
+coverage/
+*.tsbuildinfo
+
+# env
+.env
+.env.*
+!.env.example
+
+# python
+__pycache__/
+*.pyc
+.pytest_cache/
+.ruff_cache/
+.venv/
+venv/
+
+# data (raw datasets are downloaded by ml/scripts/download_data.py)
+data/raw/
+data/processed/
+*.zip
+
+# ml: trained models (<100KB) and metrics.json are committed so the service runs
+# without retraining; rebuild them with ml/train.py
+
+# misc
+.DS_Store
+Thumbs.db
+*.log
+.vscode/
+.idea/
+playwright-report/
+test-results/

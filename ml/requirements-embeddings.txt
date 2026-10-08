@@ -1,0 +1,3 @@
+# Optional: semantic embeddings (pulls in torch, ~800MB). Without it the service
+# uses the stateless hashing embedder.
+sentence-transformers>=3

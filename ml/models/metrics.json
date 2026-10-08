@@ -1,0 +1,249 @@
+{
+  "generated_at": "2026-10-08T20:05:40+00:00",
+  "dataset": {
+    "name": "UCI Incident management process enriched event log (id 498)",
+    "events": 141712,
+    "incidents": 24918,
+    "opened_range": [
+      "2016-02-29 01:16:00",
+      "2017-02-16 14:17:00"
+    ]
+  },
+  "split": {
+    "method": "chronological on opened_at (first 80% train, last 20% test)",
+    "train": 19934,
+    "test": 4984,
+    "test_starts_at": "2016-05-11 00:29:00"
+  },
+  "leakage_controls": {
+    "feature_source": "first logged event per incident (lowest sys_mod_count)",
+    "target_source": "last logged event per incident",
+    "excluded_columns": {
+      "incident_state": "changes over the life of the ticket",
+      "active": "derived from final state",
+      "reassignment_count": "accumulates after opening",
+      "reopen_count": "accumulates after opening",
+      "sys_mod_count": "accumulates after opening",
+      "made_sla": "target (SLA task)",
+      "caller_id": "5k+ ids, identity proxy with no generalisation value",
+      "sys_created_by": "46% missing, audit metadata",
+      "sys_created_at": "46% missing, audit metadata",
+      "sys_updated_by": "per-event metadata",
+      "sys_updated_at": "per-event metadata (used only for ordering)",
+      "cmdb_ci": "99.8% missing",
+      "assigned_to": "set during triage",
+      "knowledge": "may be set by the resolver",
+      "u_priority_confirmation": "set by the agent after review",
+      "notify": "near-constant",
+      "problem_id": "linked after investigation",
+      "rfc": "linked after investigation",
+      "vendor": "linked after investigation",
+      "caused_by": "100% missing",
+      "closed_code": "known at closure",
+      "resolved_by": "known at resolution",
+      "resolved_at": "used only to compute the regression target",
+      "closed_at": "known at closure"
+    }
+  },
+  "tasks": {
+    "priority": {
+      "features": [
+        "contact_type",
+        "location",
+        "category",
+        "subcategory",
+        "u_symptom",
+        "assignment_group",
+        "opened_by",
+        "open_hour",
+        "open_weekday",
+        "open_weekend",
+        "open_business_hours"
+      ],
+      "label_distribution_test": {
+        "3 - Moderate": 0.9547,
+        "4 - Low": 0.0261,
+        "2 - High": 0.0122,
+        "1 - Critical": 0.007
+      },
+      "models": {
+        "majority": {
+          "macro_f1": 0.2442,
+          "accuracy": 0.9547
+        },
+        "logistic_regression": {
+          "macro_f1": 0.3266,
+          "accuracy": 0.7317
+        },
+        "gradient_boosting": {
+          "macro_f1": 0.378,
+          "accuracy": 0.8313
+        }
+      },
+      "itil_matrix_lookup_accuracy": 1.0
+    },
+    "sla_breach": {
+      "positive_rate_train": 0.3997,
+      "positive_rate_test": 0.2301,
+      "feature_sets": {
+        "full": {
+          "features": [
+            "contact_type",
+            "location",
+            "category",
+            "subcategory",
+            "u_symptom",
+            "assignment_group",
+            "opened_by",
+            "impact",
+            "urgency",
+            "priority",
+            "open_hour",
+            "open_weekday",
+            "open_weekend",
+            "open_business_hours"
+          ],
+          "models": {
+            "majority": {
+              "roc_auc": 0.5,
+              "brier": 0.2301,
+              "f1_at_0_5": 0.0,
+              "validation_roc_auc": 0.5
+            },
+            "logistic_regression": {
+              "roc_auc": 0.7797,
+              "brier": 0.1587,
+              "f1_at_0_5": 0.4871,
+              "validation_roc_auc": 0.771
+            },
+            "gradient_boosting": {
+              "roc_auc": 0.7864,
+              "brier": 0.1551,
+              "f1_at_0_5": 0.5015,
+              "validation_roc_auc": 0.7616
+            }
+          },
+          "selected_on_validation": "logistic_regression"
+        },
+        "app_compatible": {
+          "features": [
+            "contact_type",
+            "impact",
+            "urgency",
+            "priority",
+            "open_hour",
+            "open_weekday",
+            "open_weekend",
+            "open_business_hours"
+          ],
+          "models": {
+            "majority": {
+              "roc_auc": 0.5,
+              "brier": 0.2301,
+              "f1_at_0_5": 0.0,
+              "validation_roc_auc": 0.5
+            },
+            "logistic_regression": {
+              "roc_auc": 0.6076,
+              "brier": 0.1999,
+              "f1_at_0_5": 0.218,
+              "validation_roc_auc": 0.5743
+            },
+            "gradient_boosting": {
+              "roc_auc": 0.6152,
+              "brier": 0.1976,
+              "f1_at_0_5": 0.1457,
+              "validation_roc_auc": 0.5916
+            }
+          },
+          "selected_on_validation": "gradient_boosting"
+        }
+      }
+    },
+    "resolution_time": {
+      "n_train": 18546,
+      "n_test": 4816,
+      "target": "hours from opened_at to resolved_at; models fit on log1p(hours)",
+      "test_median_hours": 3.19,
+      "feature_sets": {
+        "full": {
+          "features": [
+            "contact_type",
+            "location",
+            "category",
+            "subcategory",
+            "u_symptom",
+            "assignment_group",
+            "opened_by",
+            "impact",
+            "urgency",
+            "priority",
+            "open_hour",
+            "open_weekday",
+            "open_weekend",
+            "open_business_hours"
+          ],
+          "models": {
+            "median": {
+              "mae_hours": 137.06,
+              "median_ae_hours": 24.95,
+              "validation_mae_hours": 146.49
+            },
+            "ridge_regression": {
+              "mae_hours": 126.44,
+              "median_ae_hours": 17.34,
+              "validation_mae_hours": 132.56
+            },
+            "gradient_boosting": {
+              "mae_hours": 125.31,
+              "median_ae_hours": 18.65,
+              "validation_mae_hours": 129.98
+            }
+          },
+          "selected_on_validation": "gradient_boosting"
+        },
+        "app_compatible": {
+          "features": [
+            "contact_type",
+            "impact",
+            "urgency",
+            "priority",
+            "open_hour",
+            "open_weekday",
+            "open_weekend",
+            "open_business_hours"
+          ],
+          "models": {
+            "median": {
+              "mae_hours": 137.06,
+              "median_ae_hours": 24.95,
+              "validation_mae_hours": 146.49
+            },
+            "ridge_regression": {
+              "mae_hours": 136.0,
+              "median_ae_hours": 21.8,
+              "validation_mae_hours": 145.28
+            },
+            "gradient_boosting": {
+              "mae_hours": 141.11,
+              "median_ae_hours": 27.35,
+              "validation_mae_hours": 149.0
+            }
+          },
+          "selected_on_validation": "ridge_regression"
+        }
+      }
+    }
+  },
+  "deployed_models": {
+    "breach_app.joblib": "sla_breach / app_compatible / gradient_boosting",
+    "resolution_app.joblib": "resolution_time / app_compatible / ridge_regression",
+    "selection": "best validation score on the last 15% (chronological) of the training window"
+  },
+  "environment": {
+    "python": "3.12.7",
+    "scikit_learn": "1.9.1",
+    "seed": 42,
+    "train_seconds": 11.6
+  }
+}
