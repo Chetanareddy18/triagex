@@ -1,0 +1,22 @@
+{
+  "name": "triagex",
+  "private": true,
+  "version": "1.0.0",
+  "description": "AI-assisted incident management with SLA automation and a tamper-evident audit trail",
+  "workspaces": [
+    "server",
+    "client"
+  ],
+  "scripts": {
+    "dev:server": "npm run dev -w server",
+    "dev:client": "npm run dev -w client",
+    "build": "npm run build -w server && npm run build -w client",
+    "lint": "npm run lint -w server && npm run lint -w client",
+    "typecheck": "npm run typecheck -w server && npm run typecheck -w client",
+    "test": "npm test -w server",
+    "seed": "npm run seed -w server"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

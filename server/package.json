@@ -1,0 +1,56 @@
+{
+  "name": "@triagex/server",
+  "version": "1.0.0",
+  "private": true,
+  "description": "TriageX REST + Socket.IO API",
+  "type": "module",
+  "main": "dist/index.js",
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "build": "tsc -p tsconfig.build.json",
+    "start": "node dist/index.js",
+    "test": "vitest run",
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit",
+    "seed": "tsx src/scripts/seed.ts"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.132.1",
+    "bcryptjs": "^3.0.3",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.6",
+    "dotenv": "^18.0.6",
+    "express": "^5.2.1",
+    "express-rate-limit": "^8.7.1",
+    "helmet": "^8.3.0",
+    "jsonwebtoken": "^9.0.3",
+    "mongoose": "^9.11.1",
+    "node-cron": "^4.6.0",
+    "pino": "^10.4.0",
+    "pino-http": "^11.0.0",
+    "socket.io": "^4.8.4",
+    "zod": "^4.6.5"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@types/cookie-parser": "^1.4.10",
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.6",
+    "@types/jsonwebtoken": "^9.0.10",
+    "@types/node": "^20.19.43",
+    "@types/supertest": "^7.2.1",
+    "eslint": "^10.12.0",
+    "globals": "^17.13.0",
+    "mongodb-memory-server": "^11.3.0",
+    "pino-pretty": "^13.2.0",
+    "socket.io-client": "^4.8.4",
+    "supertest": "^7.3.1",
+    "tsx": "^4.23.15",
+    "typescript": "^6.0.3",
+    "typescript-eslint": "^8.71.1",
+    "vitest": "^4.1.11"
+  }
+}
