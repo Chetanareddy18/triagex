@@ -328,7 +328,7 @@ export default function IncidentDetail() {
                   <Select
                     value={assigneeId ?? ''}
                     onChange={(e) => assign.mutate({ assigneeId: e.target.value || null })}
-                    className="h-8 w-44 py-1 text-xs"
+                    className="h-8 w-48 py-1 text-xs"
                     disabled={assign.isPending}
                     aria-label="Assignee"
                   >
@@ -336,7 +336,7 @@ export default function IncidentDetail() {
                     {agentsQ.data?.map((a) => (
                       <option key={a.id} value={a.id}>
                         {a.name}
-                        {a.load != null ? ` (load ${a.load})` : ' (admin)'}
+                        {a.load != null ? ` - load ${a.load}` : ' - admin'}
                       </option>
                     ))}
                   </Select>
@@ -353,7 +353,7 @@ export default function IncidentDetail() {
               )}
               <DetailRow label="Priority">
                 {staff && open ? (
-                  <Select value={inc.priority} onChange={(e) => update.mutate({ priority: Number(e.target.value) as Incident['priority'] })} className="h-8 w-44 py-1 text-xs" aria-label="Priority">
+                  <Select value={inc.priority} onChange={(e) => update.mutate({ priority: Number(e.target.value) as Incident['priority'] })} className="h-8 w-48 py-1 text-xs" aria-label="Priority">
                     {[1, 2, 3, 4].map((p) => (
                       <option key={p} value={p}>
                         P{p} {PRIORITY_LABEL[p as 1]}
@@ -366,7 +366,7 @@ export default function IncidentDetail() {
               </DetailRow>
               <DetailRow label="Category">
                 {staff && open ? (
-                  <Select value={inc.category} onChange={(e) => update.mutate({ category: e.target.value as Incident['category'] })} className="h-8 w-44 py-1 text-xs" aria-label="Category">
+                  <Select value={inc.category} onChange={(e) => update.mutate({ category: e.target.value as Incident['category'] })} className="h-8 w-48 py-1 text-xs" aria-label="Category">
                     {CATEGORIES.map((c) => (
                       <option key={c} value={c}>
                         {CATEGORY_LABEL[c]}

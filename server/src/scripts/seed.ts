@@ -75,7 +75,7 @@ async function main() {
   const total = Number(process.env.SEED_INCIDENTS ?? 200);
   const now = Date.now();
   // Chronological creation times, denser in recent weeks.
-  const recent = Math.round(total * 0.14); // the live queue: opened in the last 3 days
+  const recent = Math.round(total * 0.09); // the live queue: opened in the last 3 days
   const times = [
     ...Array.from({ length: total - recent }, () => now - (3 * DAY + rand() * 42 * DAY)),
     ...Array.from({ length: recent }, () => now - rand() * 3 * DAY),
@@ -114,7 +114,7 @@ async function main() {
     else if (ageH > 0.4) status = rand() < 0.55 ? 'in_progress' : 'assigned';
     else status = 'new';
     if (ageH < 96 && status !== 'new' && rand() < 0.08) status = 'new'; // a few stragglers in the queue
-    if (ageH < 30 && rand() < 0.75) {
+    if (ageH < 40 && rand() < 0.8) {
       // keep the live queue busy: most of today's tickets are still being worked
       const r = rand();
       status = r < 0.3 ? 'new' : r < 0.55 ? 'assigned' : 'in_progress';

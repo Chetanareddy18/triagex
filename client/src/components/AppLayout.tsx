@@ -5,6 +5,7 @@ import { NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { isStaff, useAuth } from '../context/AuthContext';
 import { useRealtime } from '../context/RealtimeContext';
 import { useTheme } from '../context/ThemeContext';
+import { ErrorBoundary } from './ErrorBoundary';
 import { Logo } from './Logo';
 import { NotificationBell } from './NotificationBell';
 import { Avatar, Button } from './ui';
@@ -104,7 +105,9 @@ export function AppLayout() {
 
   return (
     <div className="flex min-h-full">
-      <aside className="sticky top-0 hidden h-screen w-60 shrink-0 border-r border-line bg-surface lg:block">{sidebar}</aside>
+      <div className="hidden w-60 shrink-0 border-r border-line bg-surface lg:block">
+        <aside className="sticky top-0 h-screen">{sidebar}</aside>
+      </div>
       {mobileOpen && (
         <div className="fixed inset-0 z-40 lg:hidden">
           <div className="absolute inset-0 bg-black/40" onClick={() => setMobileOpen(false)} />
@@ -140,7 +143,9 @@ export function AppLayout() {
           <NotificationBell />
         </header>
         <main className="mx-auto w-full max-w-[1400px] flex-1 px-4 py-6 sm:px-6 lg:px-8">
-          <Outlet />
+          <ErrorBoundary resetKey={location.pathname}>
+            <Outlet />
+          </ErrorBoundary>
         </main>
       </div>
     </div>
