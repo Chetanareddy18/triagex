@@ -1,0 +1,69 @@
+# Full stack: docker compose up --build
+# Then seed demo data: docker compose exec server node server/dist/scripts/seed.js
+services:
+  mongo:
+    image: mongo:7
+    restart: unless-stopped
+    volumes:
+      - mongo-data:/data/db
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "--eval", "db.adminCommand('ping').ok"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  ml:
+    build:
+      context: ./ml
+      args:
+        WITH_TRANSFORMERS: ${ML_WITH_TRANSFORMERS:-false}
+    restart: unless-stopped
+    environment:
+      EMBEDDING_BACKEND: ${EMBEDDING_BACKEND:-auto}
+      ML_API_KEY: ${ML_API_KEY:-}
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health')"]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+
+  server:
+    build:
+      context: .
+      dockerfile: server/Dockerfile
+    restart: unless-stopped
+    depends_on:
+      mongo:
+        condition: service_healthy
+      ml:
+        condition: service_started
+    environment:
+      NODE_ENV: production
+      PORT: 4000
+      MONGO_URI: mongodb://mongo:27017/triagex
+      ML_URL: http://ml:8000
+      ML_API_KEY: ${ML_API_KEY:-}
+      CLIENT_ORIGIN: http://localhost:8080
+      JWT_ACCESS_SECRET: ${JWT_ACCESS_SECRET:?set JWT_ACCESS_SECRET in .env}
+      JWT_REFRESH_SECRET: ${JWT_REFRESH_SECRET:?set JWT_REFRESH_SECRET in .env}
+      AUDIT_SIGNING_KEY: ${AUDIT_SIGNING_KEY:?set AUDIT_SIGNING_KEY in .env}
+      ALERT_INGEST_KEY: ${ALERT_INGEST_KEY:-}
+      LLM_PROVIDER: ${LLM_PROVIDER:-none}
+      LLM_API_KEY: ${LLM_API_KEY:-}
+      LLM_MODEL: ${LLM_MODEL:-}
+      COOKIE_SECURE: "false"
+    ports:
+      - "${API_PORT:-4000}:4000"
+
+  client:
+    build:
+      context: .
+      dockerfile: client/Dockerfile
+    restart: unless-stopped
+    depends_on:
+      - server
+    ports:
+      - "${WEB_PORT:-8080}:80"
+
+volumes:
+  mongo-data:

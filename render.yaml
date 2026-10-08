@@ -1,0 +1,55 @@
+# Render Blueprint: API (Node) + ML (Python). MongoDB is expected on Atlas (set MONGO_URI).
+# The React client deploys to Vercel (client/vercel.json rewrites /api to the API below).
+services:
+  - type: web
+    name: triagex-api
+    runtime: node
+    plan: free
+    buildCommand: npm ci --workspace server --include-workspace-root && npm run build --workspace server
+    startCommand: node server/dist/index.js
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_VERSION
+        value: "20"
+      - key: NODE_ENV
+        value: production
+      - key: MONGO_URI
+        sync: false
+      - key: CLIENT_ORIGIN
+        sync: false # e.g. https://triagex.vercel.app
+      - key: JWT_ACCESS_SECRET
+        generateValue: true
+      - key: JWT_REFRESH_SECRET
+        generateValue: true
+      - key: AUDIT_SIGNING_KEY
+        generateValue: true
+      - key: ML_URL
+        sync: false # e.g. https://triagex-ml.onrender.com
+      - key: ML_API_KEY
+        sync: false
+      - key: ML_TIMEOUT_MS
+        value: "6000" # free instances cold-start
+      - key: COOKIE_SECURE
+        value: "true"
+      - key: COOKIE_SAMESITE
+        value: lax # same-site via the Vercel rewrite
+      - key: ALERT_INGEST_KEY
+        sync: false
+      - key: LLM_PROVIDER
+        value: none
+
+  - type: web
+    name: triagex-ml
+    runtime: python
+    plan: free
+    rootDir: ml
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn triagex_ml.api:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /health
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.12.7"
+      - key: EMBEDDING_BACKEND
+        value: hashing # torch does not fit the free instance; set to auto on larger plans
+      - key: ML_API_KEY
+        sync: false
